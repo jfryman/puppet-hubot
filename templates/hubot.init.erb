@@ -1,0 +1,27 @@
+# hubot
+
+description "Hubot IRC bot"
+
+start on filesystem or runlevel [2345]
+stop on runlevel [!2345]
+
+# Path to Hubot installation
+env HUBOT_DIR='/opt/hubot/'
+env HUBOT='bin/hubot'
+env ADAPTER='irc'
+# Name (and local user) to run Hubot as
+env HUBOT_USER='hubot'
+# httpd listen port
+env PORT='5555'
+
+export HUBOT_IRC_ROOMS="#soggies"
+export HUBOT_IRC_SERVER="localhost"
+export HUBOT_LOG_LEVEL="debug"  # This helps to see what Hubot is doing
+export HUBOT_IRC_DEBUG="true"
+
+# Keep the process alive, limit to 5 restarts in 60s
+respawn
+respawn limit 5 60
+
+exec start-stop-daemon --start --chuid ${HUBOT_USER} --chdir ${HUBOT_DIR} \
+  --exec ${HUBOT_DIR}${HUBOT} -- --name ${HUBOT_USER} --adapter ${ADAPTER}
