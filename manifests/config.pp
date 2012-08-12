@@ -61,6 +61,7 @@ class hubot::config (
     file { "${install_dir}/scripts":
       ensure => symlink,
       target => $vagrant_hubot,
+      force  => true,
     }
   } else {
     # Create a repository for scripts that hubot will read
