@@ -5,7 +5,7 @@ require 'json'
 scripts = []
 
 # Get all files in the directory and jam them into an array
-Dir.foreach("<%= install_dir %>/scripts-enabled") do |f|
+Dir.foreach("<%= install_dir %>/scripts") do |f|
   next if f == '.' or f == '..'
   scripts << f
 end
