@@ -66,11 +66,6 @@ class hubot::config (
   } else {
     # Create a repository for scripts that hubot will read
     file { "${install_dir}/scripts":
-      ensure => directory,
-    }
-    # File Fragment pattern to assemble external scripts
-    # from hubot::script definition
-    file { "${install_dir}/scripts-enabled":
       ensure  => directory,
       purge   => true,
       recurse => true,
@@ -78,7 +73,7 @@ class hubot::config (
     exec { 'rebuild hubot scripts':
       command     => 'ruby /usr/local/sbin/rebuild-hubot-scripts.rb',
       refreshonly => true,
-      subscribe   => File["${install_dir}/scripts-enabled"],
+      subscribe   => File["${install_dir}/scripts"],
     }
     # End File Fragment
   }

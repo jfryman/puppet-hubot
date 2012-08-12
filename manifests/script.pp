@@ -1,7 +1,11 @@
 define hubot::script (
-  source,
-  type = 'coffee'
+  $source,
+  $type = 'download',
+  $format = 'coffee',
+  $install_dir = undef
 ) {
+  include hubot::params
+
   Exec {
     path => '/bin:/sbin:/usr/bin:/usr/sbin',
   }
@@ -12,7 +16,18 @@ define hubot::script (
     mode  => '0644',
   }
 
-  case $type {
+  # Make sure $install_dir is set properly
+  if $install_dir == undef {
+    $REAL_install_dir = $hubot::params::options['install_dir']
+  } else { 
+    $REAL_install_dir = $install_dir
+  }
+
+  # File format isn't going to come from the
+  # title of the definition, so let's give
+  # the user an attribute they can set 
+  # to make sure that all is good with the world.
+  case $format {
     js,javascript: { $file_extension = '.js' }
     cs,coffee,coffeescript: { $file_extension = '.coffee' }
     default: {
@@ -20,14 +35,28 @@ define hubot::script (
     }
   }
 
-  exec { "download hubot script: ${name}":
-    command => "wget ${source} -O /opt/hubot/scripts/${name}.${file_extension}",
-    creates => "/opt/hubot/scripts/${name}.${file_extension}",
-  }
-
-  # Ensure Puppet knows about the file
-  # to ensure the File-Fragment is okay.
-  file { "/opt/hubot/scripts-enabled/${name}.${file_extension}":
-    ensure => file,
+  # Different options for a local file out of a repo
+  # or via a download link (http)
+  case $type {
+    download,www,wget: {
+      exec { "download hubot script: ${name}":
+        command => "wget ${source} -O ${REAL_install_dir}/scripts/${name}.${file_extension}",
+        creates => "${REAL_install_dir}/scripts/${name}.${file_extension}",
+      }
+      # Ensure Puppet knows about the file
+      # to ensure the File-Fragment is okay.
+      file { "${REAL_install_dir}/scripts/${name}.${file_extension}":
+        ensure   => file,
+        requires => Exec["download hubot script: ${name}"],
+      }
+    }
+    puppet,local: {
+      # Ensure Puppet knows about the file
+      # to ensure the File-Fragment is okay.
+      file { "${REAL_install_dir}/scripts/${name}.${file_extension}":
+        ensure => file,
+        source => $source,
+      }
+    }
   }
 }
