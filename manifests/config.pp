@@ -5,7 +5,8 @@ class hubot::config (
   $irc_nickname,
   $irc_password = undef,
   $irc_server,
-  $irc_rooms
+  $irc_rooms,
+  $vagrant_hubot
 ) inherits hubot::params {
   File {
     owner => 'root',
@@ -33,11 +34,6 @@ class hubot::config (
     password   => '$1$ihlrowCw$ry859tfQCVnvwpsT.dDIR0',
   }
 
-  # Create a repository for scripts that hubot will read
-  file { "${install_dir}/scripts":
-    ensure => directory,
-  }
-
   # Main hubot configuration file
   file { "${install_dir}/package.json":
     ensure  => file,
@@ -51,24 +47,38 @@ class hubot::config (
     cwd         => $install_dir,
     refreshonly => true,
   }
-
-  # File Fragment pattern to assemble external scripts
-  # from hubot::script definition
   file { '/usr/local/sbin/rebuild-hubot-scripts.rb':
     ensure  => present,
     mode    => '0755',
     content => template('hubot/rebuild-hubot-scripts.rb.erb'),
+    before  => Exec['rebuild hubot scripts'],
   }
-  file { "${install_dir}/scripts-enabled":
-    ensure  => directory,
-    purge   => true,
-    recurse => true,
+
+  if $vagrant_hubot != false {
+    exec { 'rebuild hubot scripts':
+      command => 'ruby /usr/local/sbin/rebuild-hubot-scripts.rb',
+    }
+    file { "${install_dir}/scripts":
+      ensure => symlink,
+      target => $vagrant_hubot,
+    }
+  } else {
+    # Create a repository for scripts that hubot will read
+    file { "${install_dir}/scripts":
+      ensure => directory,
+    }
+    # File Fragment pattern to assemble external scripts
+    # from hubot::script definition
+    file { "${install_dir}/scripts-enabled":
+      ensure  => directory,
+      purge   => true,
+      recurse => true,
+    }
+    exec { 'rebuild hubot scripts':
+      command     => 'ruby /usr/local/sbin/rebuild-hubot-scripts.rb',
+      refreshonly => true,
+      subscribe   => File["${install_dir}/scripts-enabled"],
+    }
+    # End File Fragment
   }
-  exec { 'rebuild hubot scripts':
-    command     => 'ruby /usr/local/sbin/rebuild-hubot-scripts.rb',
-    refreshonly => true,
-    subscribe   => File["${install_dir}/scripts-enabled"],
-    require     => File['/usr/local/sbin/rebuild-hubot-scripts.rb'],
-  }
-  # End File Fragment
 }
