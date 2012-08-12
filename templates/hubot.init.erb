@@ -1,27 +1,80 @@
-# hubot
+#!/bin/bash
 
-description "Hubot IRC bot"
+### BEGIN INIT INFO
+# Provides:          hubot
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the hubot service
+# Description:       starts the Hubot bot for the Campfire rooms
+### END INIT INFO
 
-start on filesystem or runlevel [2345]
-stop on runlevel [!2345]
+test -f <%= install_dir %>/bin/hubot || exit 0
 
-# Path to Hubot installation
-env HUBOT_DIR='/opt/hubot/'
-env HUBOT='bin/hubot'
-env ADAPTER='irc'
-# Name (and local user) to run Hubot as
-env HUBOT_USER='hubot'
-# httpd listen port
-env PORT='5555'
+PIDFILE=/var/run/hubot.pid
 
-export HUBOT_IRC_ROOMS="#soggies"
-export HUBOT_IRC_SERVER="localhost"
-export HUBOT_LOG_LEVEL="debug"  # This helps to see what Hubot is doing
-export HUBOT_IRC_DEBUG="true"
+. /lib/lsb/init-functions
 
-# Keep the process alive, limit to 5 restarts in 60s
-respawn
-respawn limit 5 60
+HUBOT_DIR='<%= install_dir %>'
+HUBOT_BIN='/bin/hubot'
+HUBOT_USER='<%= daemon_user %>'
+HUBOT_ADAPTER='<%= adapter %>'
 
-exec start-stop-daemon --start --chuid ${HUBOT_USER} --chdir ${HUBOT_DIR} \
-  --exec ${HUBOT_DIR}${HUBOT} -- --name ${HUBOT_USER} --adapter ${ADAPTER}
+<% if adapter == 'irc' -%> 
+# IRC Environment Variables
+export HUBOT_IRC_NICK='<%= irc_nickname %>'
+export HUBOT_IRC_ROOMS='<%= irc_rooms.join(",") %>'
+export HUBOT_IRC_SERVER='<%= irc_server %>'
+export HUBOT_OPTS="-a $HUBOT_ADAPTER"
+<% end -%>
+
+set -e
+
+start_bot ()
+{
+  start-stop-daemon --start --quiet --chuid $HUBOT_USER --pidfile $PIDFILE --make-pidfile --background --name hubot --startas $HUBOT_DIR/$HUBOT_BIN -- $LSBNAMES $HUBOT_OPTS
+  log_end_msg $?
+}
+
+stop_bot ()
+{
+  start-stop-daemon --stop --quiet --pidfile $PIDFILE
+  STATUS=$?
+  if [ $STATUS == 0 ]; then
+    rm -r $PIDFILE
+  fi
+  log_end_msg $STATUS
+}
+
+case "$1" in
+start)    log_daemon_msg "Starting Hubot" "hubot"
+          start_bot
+          ;;
+stop)     log_daemon_msg "Stopping Hubot" "hubot"
+          stop_bot
+          ;;
+restart)  log_daemon_msg "Restarting Hubot" "hubot"
+          stop_bot
+          start_bot
+          ;;
+status)   log_action_begin_msg "Checking Hubot"
+          if pidofproc -p "$PIDFILE" >/dev/null; then
+            log_action_end_msg 0 "running"
+            exit 0
+          else
+            if [ -e "$PIDFILE" ]; then
+              log_action_msg 1 "failed to start"
+              exit 1
+            else
+              log_action_end_msg 0 "not running"
+              exit 3
+            fi
+          fi
+          ;;
+*)        log_action_msg "Usage: /etc/init.d/hubot {start|stop|status|restart}"
+          exit 2
+          ;;
+esac
+
+exit 0

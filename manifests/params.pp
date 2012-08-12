@@ -8,4 +8,18 @@ class hubot::params {
       $service_name = 'hubot'
     }
   }
+  
+  $options = {
+    install_dir => '/opt/hubot',
+    daemon_user => 'hubot',
+    adapter     => 'irc',
+    git_source  => 'https://github.com/github/hubot.git',
+  }
+  
+  # Default Settings for IRC
+  $irc = {
+    nickname => 'crunchy',
+    rooms    => ['#soggies'],
+    server   => 'localhost',
+  }
 }
