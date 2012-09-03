@@ -13,6 +13,11 @@ class hubot::package (
     ensure   => present,
     provider => 'npm',
   }
+  package {
+    "json":
+        ensure => installed,
+        provider => gem,
+  }
   exec { 'download hubot via git':
     command => "git clone ${git_source} ${install_dir}",
     creates => $install_dir,
