@@ -1,6 +1,6 @@
 class hubot::params {
   case $::operatingsystem {
-    debian: {
+    /Debian|Ubuntu/: {
       $packages = ['build-essential', 'libssl-dev', 'git-core', 
                    'redis-server', 'libexpat1-dev'
                   ]
