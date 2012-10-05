@@ -27,13 +27,19 @@ export HUBOT_IRC_NICK='<%= irc_nickname %>'
 export HUBOT_IRC_ROOMS='<%= irc_rooms.join(",") %>'
 export HUBOT_IRC_SERVER='<%= irc_server %>'
 export HUBOT_OPTS="-a $HUBOT_ADAPTER"
+<% elsif adapter == 'campfire' -%> 
+# Campfire Environment Variables
+export HUBOT_CAMPFIRE_ACCOUNT='<%= campfire_account %>'
+export HUBOT_CAMPFIRE_ROOMS='<%= campfire_rooms.join(",") %>'
+export HUBOT_CAMPFIRE_TOKEN='<%= campfire_token %>'
+export HUBOT_OPTS="-a $HUBOT_ADAPTER"
 <% end -%>
 
 set -e
 
 start_bot ()
 {
-  start-stop-daemon --start --quiet --chuid $HUBOT_USER --pidfile $PIDFILE --make-pidfile --background --name hubot --startas $HUBOT_DIR/$HUBOT_BIN -- $LSBNAMES $HUBOT_OPTS
+  start-stop-daemon --start --quiet --chuid $HUBOT_USER --chdir $HUBOT_DIR --pidfile $PIDFILE --make-pidfile --background --name hubot --startas $HUBOT_DIR/$HUBOT_BIN -- $LSBNAMES $HUBOT_OPTS
   log_end_msg $?
 }
 
