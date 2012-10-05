@@ -33,7 +33,7 @@ set -e
 
 start_bot ()
 {
-  start-stop-daemon --start --quiet --chuid $HUBOT_USER --pidfile $PIDFILE --make-pidfile --background --name hubot --startas $HUBOT_DIR/$HUBOT_BIN -- $LSBNAMES $HUBOT_OPTS
+  start-stop-daemon --start --quiet --chuid $HUBOT_USER --chdir $HUBOT_DIR --pidfile $PIDFILE --make-pidfile --background --name hubot --startas $HUBOT_DIR/$HUBOT_BIN -- $LSBNAMES $HUBOT_OPTS
   log_end_msg $?
 }
 
