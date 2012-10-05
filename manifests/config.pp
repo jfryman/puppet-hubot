@@ -2,6 +2,7 @@ class hubot::config (
   $adapter,
   $install_dir,
   $daemon_user,
+  $daemon_pass = undef,
   $irc_nickname,
   $irc_password = undef,
   $irc_server,
@@ -31,7 +32,7 @@ class hubot::config (
     home       => "/home/${daemon_user}",
     shell      => '/bin/bash',
     managehome => true,
-    password   => '$1$ihlrowCw$ry859tfQCVnvwpsT.dDIR0',
+    password   => $daemon_pass,
   }
 
   # Main hubot configuration file
