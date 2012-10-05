@@ -27,6 +27,12 @@ export HUBOT_IRC_NICK='<%= irc_nickname %>'
 export HUBOT_IRC_ROOMS='<%= irc_rooms.join(",") %>'
 export HUBOT_IRC_SERVER='<%= irc_server %>'
 export HUBOT_OPTS="-a $HUBOT_ADAPTER"
+<% elsif adapter == 'campfire' -%> 
+# Campfire Environment Variables
+export HUBOT_CAMPFIRE_ACCOUNT='<%= campfire_account %>'
+export HUBOT_CAMPFIRE_ROOMS='<%= campfire_rooms.join(",") %>'
+export HUBOT_CAMPFIRE_TOKEN='<%= campfire_token %>'
+export HUBOT_OPTS="-a $HUBOT_ADAPTER"
 <% end -%>
 
 set -e
