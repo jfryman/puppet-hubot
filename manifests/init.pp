@@ -12,6 +12,7 @@ class hubot (
   $campfire_account = undef,
   $campfire_rooms   = undef,
   $campfire_token   = undef,
+  $environment      = undef,
 ) inherits hubot::params {
   include stdlib
 
@@ -33,6 +34,7 @@ class hubot (
     campfire_rooms   => $campfire_rooms,
     campfire_token   => $campfire_token,
     vagrant_hubot    => $vagrant_hubot,
+    environment      => $environment,
   }
   ~> class { 'hubot::service': }
   -> anchor { 'hubot::end': }

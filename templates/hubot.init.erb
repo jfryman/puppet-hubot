@@ -34,7 +34,11 @@ export HUBOT_CAMPFIRE_ROOMS='<%= campfire_rooms.join(",") %>'
 export HUBOT_CAMPFIRE_TOKEN='<%= campfire_token %>'
 export HUBOT_OPTS="-a $HUBOT_ADAPTER"
 <% end -%>
-
+<% if @environment -%>
+<% environment.each do |var| -%>
+export <%= var %>
+<% end -%>
+<% end -%>
 set -e
 
 start_bot ()
