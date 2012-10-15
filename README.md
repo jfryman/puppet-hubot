@@ -27,8 +27,18 @@ Puppet Labs NodeJS
   }
 </pre>
 
+# Environment Variables
+Some scripts require environment variables to be set at run time. this can be acheived with the environment option:
+
+<pre>
+  class { 'hubot':
+    adapter => 'irc',
+    irc_nickname => 'crunchy',
+    irc_server   => 'irc.freenode.com',
+    irc_rooms    => ['#soggies'],
+    environment  => [ 'MYVAR=VAR1', 'THISVAR=that' ],
+  }
+</pre>
 # TODO
-- Add Campfire support to Init Script/packages.js
-- Validate Ubuntu Support
 - Add Redhat Support?
 

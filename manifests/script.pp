@@ -28,8 +28,8 @@ define hubot::script (
   # the user an attribute they can set 
   # to make sure that all is good with the world.
   case $format {
-    js,javascript: { $file_extension = '.js' }
-    cs,coffee,coffeescript: { $file_extension = '.coffee' }
+    js,javascript: { $file_extension = 'js' }
+    cs,coffee,coffeescript: { $file_extension = 'coffee' }
     default: {
       fail("Unsupported Type: ${type}. Allowed are: js,javascript| cs,coffee,coffeescript")
     }
@@ -42,12 +42,12 @@ define hubot::script (
       exec { "download hubot script: ${name}":
         command => "wget ${source} -O ${REAL_install_dir}/scripts/${name}.${file_extension}",
         creates => "${REAL_install_dir}/scripts/${name}.${file_extension}",
+	notify  => File["${REAL_install_dir}/scripts/${name}.${file_extension}"],
       }
       # Ensure Puppet knows about the file
       # to ensure the File-Fragment is okay.
       file { "${REAL_install_dir}/scripts/${name}.${file_extension}":
-        ensure   => file,
-        requires => Exec["download hubot script: ${name}"],
+        ensure       => file,
       }
     }
     puppet,local: {

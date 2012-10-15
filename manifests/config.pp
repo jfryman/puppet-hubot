@@ -10,7 +10,8 @@ class hubot::config (
   $campfire_account = undef,
   $campfire_rooms = undef,
   $campfire_token = undef,
-  $vagrant_hubot
+  $vagrant_hubot,
+  $environment = undef
 ) inherits hubot::params {
 
   # Sanity check config
