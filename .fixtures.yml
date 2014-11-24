@@ -1,0 +1,6 @@
+fixtures:
+    repositories:
+        stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+        nodejs: "https://github.com/puppetlabs/puppetlabs-nodejs"
+    symlinks:
+        hubot: "../../../"
