@@ -69,7 +69,7 @@ restart)  log_daemon_msg "Restarting Hubot" "hubot"
           start_bot
           ;;
 status)   log_action_begin_msg "Checking Hubot"
-          if pidofproc -p "$PIDFILE" >/dev/null; then
+          if pidofproc -p "$PIDFILE" node >/dev/null; then
             log_action_end_msg 0 "running"
             exit 0
           else
