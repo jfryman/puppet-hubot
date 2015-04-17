@@ -1,3 +1,4 @@
+# Hubot main class
 class hubot (
   $adapter          = $hubot::params::options['adapter'],
   $install_dir      = $hubot::params::options['install_dir'],
@@ -17,11 +18,11 @@ class hubot (
   include stdlib
 
   anchor { 'hutbot::begin': }
-  -> class { 'hubot::package': 
+  -> class { 'hubot::package':
     install_dir => $install_dir,
     git_source  => $git_source,
   }
-  -> class { 'hubot::config': 
+  -> class { 'hubot::config':
     adapter          => $adapter,
     install_dir      => $install_dir,
     daemon_user      => $daemon_user,

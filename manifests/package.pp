@@ -1,3 +1,4 @@
+# Hubot package class
 class hubot::package (
   $install_dir,
   $git_source
@@ -13,9 +14,8 @@ class hubot::package (
     ensure   => present,
     provider => 'npm',
   }
-  package {
-    "json":
-        ensure => installed,
+  package { 'json':
+        ensure   => installed,
         provider => gem,
   }
   exec { 'download hubot via git':
