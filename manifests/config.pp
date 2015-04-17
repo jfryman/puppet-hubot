@@ -1,3 +1,4 @@
+# Hubot config class
 class hubot::config (
   $adapter,
   $install_dir,
@@ -18,13 +19,13 @@ class hubot::config (
   case $adapter {
     irc: {
         if (!defined($irc_nickname)) and ($irc_rooms[0] == '') and (!defined($irc_server)) {
-            fail("Required Options missing: $adapter requires options: irc_nickname, irc_server, irc_rooms")
-	}
+            fail('Required Options missing: attribute adapter requires options: irc_nickname, irc_server, irc_rooms')
+        }
     }
     campfire: {
         if (!defined($campfire_account)) and ($campfire_rooms[0] == '') and (!defined($campfire_token)) {
-            fail("Required Options missing: $adapter requires options: campfire_account, campfire_rooms, campfire_token")
-	}
+            fail('Required Options missing: Attribute adapter requires options: campfire_account, campfire_rooms, campfire_token')
+        }
     }
     default:  {
       fail("Unsupported Adapter: ${adapter}. Supported Adpaters: irc|campfire")

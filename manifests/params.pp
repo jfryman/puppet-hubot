@@ -1,11 +1,15 @@
+# Hubot params class
 class hubot::params {
   case $::operatingsystem {
     /Debian|Ubuntu/: {
-      $packages = ['build-essential', 'libssl-dev', 'git-core', 
-                   'redis-server', 'libexpat1-dev'
+      $packages = ['build-essential', 'libssl-dev', 'git-core',
+                    'redis-server', 'libexpat1-dev'
                   ]
       $npm_packages = ['coffee-script']
       $service_name = 'hubot'
+    }
+    default: {
+        fail("Your OS: ${::operatingsystem} is not supported by this module")
     }
   }
   

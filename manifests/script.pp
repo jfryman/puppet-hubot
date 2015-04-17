@@ -1,3 +1,4 @@
+# Hubot script define
 define hubot::script (
   $source,
   $type = 'download',
@@ -19,7 +20,7 @@ define hubot::script (
   # Make sure $install_dir is set properly
   if $install_dir == undef {
     $REAL_install_dir = $hubot::params::options['install_dir']
-  } else { 
+  } else {
     $REAL_install_dir = $install_dir
   }
 
@@ -42,7 +43,7 @@ define hubot::script (
       exec { "download hubot script: ${name}":
         command => "wget ${source} -O ${REAL_install_dir}/scripts/${name}.${file_extension}",
         creates => "${REAL_install_dir}/scripts/${name}.${file_extension}",
-	notify  => File["${REAL_install_dir}/scripts/${name}.${file_extension}"],
+        notify  => File["${REAL_install_dir}/scripts/${name}.${file_extension}"],
       }
       # Ensure Puppet knows about the file
       # to ensure the File-Fragment is okay.
@@ -57,6 +58,9 @@ define hubot::script (
         ensure => file,
         source => $source,
       }
+    }
+    default: {
+        fail("Unknown type of file: ${type} - valid entries: download, www, wget, puppet, local")
     }
   }
 }
