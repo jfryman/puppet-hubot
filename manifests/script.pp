@@ -5,7 +5,6 @@ define hubot::script (
   $format = 'coffee',
   $install_dir = undef
 ) {
-  include hubot::params
 
   Exec {
     path => '/bin:/sbin:/usr/bin:/usr/sbin',
@@ -19,7 +18,7 @@ define hubot::script (
 
   # Make sure $install_dir is set properly
   if $install_dir == undef {
-    $REAL_install_dir = $hubot::params::options['install_dir']
+    $REAL_install_dir = $hubot::options['install_dir']
   } else {
     $REAL_install_dir = $install_dir
   }

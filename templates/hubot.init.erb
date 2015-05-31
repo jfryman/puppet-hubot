@@ -10,28 +10,28 @@
 # Description:       starts the Hubot bot for the Campfire rooms
 ### END INIT INFO
 
-test -f <%= install_dir %>/bin/hubot || exit 0
+test -f <%= @install_dir %>/bin/hubot || exit 0
 
 PIDFILE=/var/run/hubot.pid
 
 . /lib/lsb/init-functions
 
-HUBOT_DIR='<%= install_dir %>'
+HUBOT_DIR='<%= @install_dir %>'
 HUBOT_BIN='/bin/hubot'
-HUBOT_USER='<%= daemon_user %>'
-HUBOT_ADAPTER='<%= adapter %>'
+HUBOT_USER='<%= @daemon_user %>'
+HUBOT_ADAPTER='<%= @adapter %>'
 
-<% if adapter == 'irc' -%> 
+<% if @adapter == 'irc' -%> 
 # IRC Environment Variables
-export HUBOT_IRC_NICK='<%= irc_nickname %>'
-export HUBOT_IRC_ROOMS='<%= irc_rooms.join(",") %>'
-export HUBOT_IRC_SERVER='<%= irc_server %>'
+export HUBOT_IRC_NICK='<%= @irc_nickname %>'
+export HUBOT_IRC_ROOMS='<%= @irc_rooms.join(",") %>'
+export HUBOT_IRC_SERVER='<%= @irc_server %>'
 export HUBOT_OPTS="-a $HUBOT_ADAPTER"
-<% elsif adapter == 'campfire' -%> 
+<% elsif @adapter == 'campfire' -%> 
 # Campfire Environment Variables
-export HUBOT_CAMPFIRE_ACCOUNT='<%= campfire_account %>'
-export HUBOT_CAMPFIRE_ROOMS='<%= campfire_rooms.join(",") %>'
-export HUBOT_CAMPFIRE_TOKEN='<%= campfire_token %>'
+export HUBOT_CAMPFIRE_ACCOUNT='<%= @campfire_account %>'
+export HUBOT_CAMPFIRE_ROOMS='<%= @campfire_rooms.join(",") %>'
+export HUBOT_CAMPFIRE_TOKEN='<%= @campfire_token %>'
 export HUBOT_OPTS="-a $HUBOT_ADAPTER"
 <% end -%>
 <% if @environment -%>
