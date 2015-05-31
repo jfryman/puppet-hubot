@@ -5,12 +5,12 @@ require 'json'
 scripts = []
 
 # Get all files in the directory and jam them into an array
-Dir.foreach("<%= install_dir %>/scripts") do |f|
+Dir.foreach("<%= @install_dir %>/scripts") do |f|
   next if f == '.' or f == '..'
   scripts << f
 end
 
 # Write to a file in JSON
-File.open("<%= install_dir %>/hubot-scripts.json", "w") do |f|
+File.open("<%= @install_dir %>/hubot-scripts.json", "w") do |f|
  f.write(scripts.to_json)
 end

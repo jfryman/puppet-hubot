@@ -1,16 +1,16 @@
 # Hubot package class
 class hubot::package (
   $install_dir,
-  $git_source
-) inherits hubot::params {
+  $git_source,
+) {
   Exec {
     path => '/bin:/sbin:/usr/bin:/usr/sbin',
   }
 
-  package { $hubot::params::packages:
+  package { $hubot::packages:
     ensure => present,
   }
-  package { $hubot::params::npm_packages:
+  package { $hubot::npm_packages:
     ensure   => present,
     provider => 'npm',
   }
